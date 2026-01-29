@@ -8,13 +8,12 @@ import (
 
 const maxAttempts = 10
 
-var quess bool = false
-
 func main() {
 	rand.Seed(time.Now().UnixNano())
 	randomNumber := rand.Intn(100) + 1
 
 	var inputNumber int
+	var printInputNumber []int // создаем переменную являющуюся срезом P.S если инициализировать слайс через make то мы уже к имеющимся значениям будем добавлять числа
 
 	fmt.Printf("Я загадал число от 1 до 100. У тебя %d попыток чтобы отгадать! \n", maxAttempts)
 	fmt.Println("Введите число")
@@ -28,11 +27,17 @@ func main() {
 			fmt.Scanf("%s") // Очистка буфера
 			attempt--
 			continue
+
 		}
+
+		printInputNumber = append(printInputNumber, inputNumber) //принимаем слайс и записываем в него значение
 
 		if hints(inputNumber, randomNumber) {
 			return
 		}
+
+		fmt.Printf("Числа которые вы ввели ранее: %d \n", printInputNumber) // Выводим список чисел
+
 	}
 
 	fmt.Println("Попытки кончились, вы проиграли")
