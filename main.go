@@ -3,28 +3,63 @@ package main
 import (
 	"fmt"
 	"math/rand"
+	"strings"
 	"time"
 )
 
-const maxAttempts = 10
+var maxAttempts int
+var maxNumber int
 
 func main() {
+	fmt.Println("Добро пожаловать в игру угадай число! Пожалуйста введите уровень сложности: Easy, Medium или Hard")
+
+	var inputLevel string
+	_, err := fmt.Scan(&inputLevel) // так работает fmt.Scan - сканирует поле ввода если ожидаемый тип неверный выдает ошибку
+	if err == nil {
+		inputLevel = strings.ToLower(inputLevel) //Привожу строку к нижнему регистру, тогда не имеет значение в каком регистре ввели сложность
+		switch inputLevel {
+		case "easy":
+			maxAttempts = 15
+			maxNumber = 50
+		case "medium":
+			maxAttempts = 10
+			maxNumber = 100
+		case "hard":
+			maxAttempts = 5
+			maxNumber = 200
+		default:
+			fmt.Println("Вы ввели неверное значение - установлен уровень по умолчанию Medium")
+			maxAttempts = 10
+			maxNumber = 100
+		}
+	} else {
+		fmt.Println("Вы ввели неверное значение - установлен уровень по умолчанию Medium")
+		//значения устанавливаем обязательно иначе будет паника и цикл не запустится
+		maxAttempts = 10
+		maxNumber = 100
+	}
+
+	game(maxAttempts, maxNumber)
+}
+
+// Выносим цикл в отдельную функцию для переиспользования
+func game(maxAttempts int, maxNumber int) {
 	rand.Seed(time.Now().UnixNano())
-	randomNumber := rand.Intn(100) + 1
+	randomNumber := rand.Intn(maxNumber) + 1
 
 	var inputNumber int
 	var printInputNumber []int // создаем переменную являющуюся срезом P.S если инициализировать слайс через make то мы уже к имеющимся значениям будем добавлять числа
 
-	fmt.Printf("Я загадал число от 1 до 100. У тебя %d попыток чтобы отгадать! \n", maxAttempts)
+	fmt.Printf("Я загадал число от 1 до %d. У тебя %d попыток чтобы отгадать! \n", maxNumber, maxAttempts)
 	fmt.Println("Введите число")
 
 	for attempt := 1; attempt <= maxAttempts; attempt++ {
 		fmt.Printf("Попытка %d: введите число: ", attempt)
 		// Проверка ввода
-		_, err := fmt.Scan(&inputNumber)
-		if err != nil {
+		_, err := fmt.Scan(&inputNumber) // сохраняем введеное число в переменную inputNumber. _, err - способ получить два числа, но число нам не нужно, поэтому ставим заглушку
+		if err != nil {                  // Если err не равна nil — значит, пользователь ввёл не число (например, буквы или символы). Тогда нужно обработать эту ситуацию
 			fmt.Println("Пожалуйста введите корректное число")
-			fmt.Scanf("%s") // Очистка буфера
+			fmt.Scanf("%s") // Сброс введенных некорректных данных
 			attempt--
 			continue
 
@@ -42,7 +77,6 @@ func main() {
 
 	fmt.Println("Попытки кончились, вы проиграли")
 	fmt.Printf("Загаданное число было: %d\n", randomNumber)
-
 }
 
 // пишем дополнительную функцию abs для расчета разницы по модулю (т.е функция возвращает число всегда положительное)
@@ -53,6 +87,7 @@ func abs(x int) int {
 	return x
 }
 
+// подсказки
 func hints(inputNumber int, randomNumber int) bool {
 	if inputNumber == randomNumber {
 		fmt.Println("Ура!!! Вы угадали секретное число")
