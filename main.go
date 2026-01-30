@@ -13,33 +13,12 @@ var maxNumber int
 func main() {
 	fmt.Println("Добро пожаловать в игру угадай число! Пожалуйста введите уровень сложности: Easy, Medium или Hard")
 
-	var inputLevel string
-	_, err := fmt.Scan(&inputLevel) // так работает fmt.Scan - сканирует поле ввода если ожидаемый тип неверный выдает ошибку
-	if err == nil {
-		inputLevel = strings.ToLower(inputLevel) //Привожу строку к нижнему регистру, тогда не имеет значение в каком регистре ввели сложность
-		switch inputLevel {
-		case "easy":
-			maxAttempts = 15
-			maxNumber = 50
-		case "medium":
-			maxAttempts = 10
-			maxNumber = 100
-		case "hard":
-			maxAttempts = 5
-			maxNumber = 200
-		default:
-			fmt.Println("Вы ввели неверное значение - установлен уровень по умолчанию Medium")
-			maxAttempts = 10
-			maxNumber = 100
-		}
-	} else {
-		fmt.Println("Вы ввели неверное значение - установлен уровень по умолчанию Medium")
-		//значения устанавливаем обязательно иначе будет паника и цикл не запустится
-		maxAttempts = 10
-		maxNumber = 100
-	}
+	levelChoice()
 
 	game(maxAttempts, maxNumber)
+
+	retry()
+
 }
 
 // Выносим цикл в отдельную функцию для переиспользования
@@ -77,6 +56,67 @@ func game(maxAttempts int, maxNumber int) {
 
 	fmt.Println("Попытки кончились, вы проиграли")
 	fmt.Printf("Загаданное число было: %d\n", randomNumber)
+}
+
+func retry() string {
+
+	for {
+		var retryGame string
+		fmt.Println("Хотите сыграть еще раз? Y - да, N - нет")
+		_, err := fmt.Scan(&retryGame)
+
+		if err != nil { // Если произошла ошибка ввода (например, пустой поток), обрабатываем
+			fmt.Println("Пожалуйста введите Y или N")
+
+			var dummy string
+			fmt.Scan(&dummy) // Сброс введенных некорректных данных
+			continue
+		}
+
+		retryGame = strings.ToLower(retryGame)
+
+		if retryGame == "y" {
+			levelChoice()
+			game(maxAttempts, maxNumber)
+			continue
+		} else if retryGame == "n" {
+			return "Спасибо за игру, приходите еще"
+		} else {
+			fmt.Println("Пожалуйста введите Y или N")
+		}
+	}
+
+}
+
+// функция выбора уровня сложности
+func levelChoice() {
+
+	var inputLevel string
+
+	_, err := fmt.Scan(&inputLevel) // так работает fmt.Scan - сканирует поле ввода если ожидаемый тип неверный выдает ошибку
+	if err == nil {
+		inputLevel = strings.ToLower(inputLevel) //Привожу строку к нижнему регистру, тогда не имеет значение в каком регистре ввели сложность
+		switch inputLevel {
+		case "easy":
+			maxAttempts = 15
+			maxNumber = 50
+		case "medium":
+			maxAttempts = 10
+			maxNumber = 100
+		case "hard":
+			maxAttempts = 5
+			maxNumber = 200
+		default:
+			fmt.Println("Вы ввели неверное значение - установлен уровень по умолчанию Medium")
+			maxAttempts = 10
+			maxNumber = 100
+		}
+	} else {
+		fmt.Println("Вы ввели неверное значение - установлен уровень по умолчанию Medium")
+		//значения устанавливаем обязательно иначе будет паника и цикл не запустится
+		maxAttempts = 10
+		maxNumber = 100
+	}
 }
 
 // пишем дополнительную функцию abs для расчета разницы по модулю (т.е функция возвращает число всегда положительное)
