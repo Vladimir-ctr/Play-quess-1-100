@@ -42,8 +42,8 @@ func game(maxAttempts int, maxNumber int) (bool, int) {
 
 	}
 
-	fmt.Println("Попытки кончились, вы проиграли")
-	fmt.Printf("Загаданное число было: %d\n", randomNumber)
+	fmt.Println(Red("Попытки кончились, вы проиграли"))
+	fmt.Printf(Red("Загаданное число было: %d\n"), randomNumber)
 	return false, usedAttempts
 
 }

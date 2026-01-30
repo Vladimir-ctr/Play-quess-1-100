@@ -7,7 +7,7 @@ import (
 )
 
 func levelChoice() {
-
+	fmt.Println("Выберите уровень: Easy, Medium, Hard")
 	var inputLevel string
 
 	_, err := fmt.Scan(&inputLevel) // так работает fmt.Scan - сканирует поле ввода если ожидаемый тип неверный выдает ошибку

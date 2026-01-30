@@ -2,6 +2,8 @@ package main
 
 import (
 	"fmt"
+
+	"github.com/fatih/color"
 )
 
 // Ведение файла results.json, где сохраняется дата, исход (победа/проигрыш), количество попыток.
@@ -12,12 +14,17 @@ type GameResults struct {
 	Attempts int    `json:"attempts"` // Сколько попыток использовано
 }
 
+var (
+	Green  = color.New(color.FgGreen).SprintFunc()
+	Red    = color.New(color.FgRed).SprintFunc()
+	Yellow = color.New(color.FgYellow).SprintFunc()
+)
+
 var maxAttempts int
 var maxNumber int
 
 func main() {
 	fmt.Println("Добро пожаловать в игру Угадай число!")
-	fmt.Println("Выберите уровень: Easy, Medium, Hard")
 	levelChoice()
 
 	// Запускаем игру — получаем результат

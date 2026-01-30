@@ -1,0 +1,12 @@
+[
+   {
+      "date": "30000-01-01 00:00:00",
+      "outcome": "lose",
+      "attempts": 10
+   },
+   {
+      "date": "30000-01-01 00:00:00",
+      "outcome": "lose",
+      "attempts": 15
+   }
+]
